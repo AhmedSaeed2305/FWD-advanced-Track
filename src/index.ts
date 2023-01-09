@@ -1,8 +1,11 @@
-const foo = function (name: string, byear: number) {
-  const msg = `Hello, ${name}! congratz for turning ${2023 - byear} years old`;
-  return msg;
-};
+import express from "express";
+import routes from "./routes/server"
+const app = express();
+const port = 3000;
 
-console.log(foo("Ahmed", 1994));
+app.listen(port, () => {
+  console.log(`Hey there I'm working on http://localhost:${port}`);
+});
 
-export default foo;
+
+app.use("/",routes)

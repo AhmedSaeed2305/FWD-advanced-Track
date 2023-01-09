@@ -1,14 +1,12 @@
 import express from "express";
-import image from "./api/img";
+import img from "./api/img";
 
-const app = express();
-const port = 3000;
+const routes = express.Router();
 
-app.listen(port, () => {
-  console.log(`Hey there I'm working on http://localhost:${port}`);
+routes.get("/", (req, res) => {
+  res.send("Hello there, Iam Ahmed's first local server, nice to meet you :D");
 });
 
-app.get("/", (req, res) => {
-    res.send("Hello there, Iam Ahmed's first local server, nice to meet you :D");
-});
-app.use("/api/image", image);
+routes.use("/image", img);
+
+export default routes;
