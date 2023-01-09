@@ -7,6 +7,6 @@ routes.get("/", (req, res) => {
   res.send("Hello there, Iam Ahmed's first local server, nice to meet you :D");
 });
 
-routes.use("/image", img);
+routes.use("/api/images", img);
 
 export default routes;
