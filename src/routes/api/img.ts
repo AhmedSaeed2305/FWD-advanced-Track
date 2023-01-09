@@ -1,35 +1,43 @@
 import express from "express";
 import sharp from "sharp";
-const fs = require("fs");
 
 const img = express.Router();
 
-const resizeImage = async function (width: number, height: number) {
+const resizeImage = async function (
+  filename: string,
+  width: number,
+  height: number
+) {
   try {
-    await sharp("./imgs/fjord.jpg")
+    const path = `./imgs/${filename}.jpg`;
+    await sharp(path)
       .resize({
         width: width,
         height: height,
+        fit: "fill",
       })
       .toFile("./imgs/thumbs/fjord-resized.jpg");
   } catch (err) {
-    console.log(err);
+    return err;
   }
 };
 
 img.get("/", (req, res) => {
   const queryData = req.query;
-  resizeImage(Number(queryData.width), Number(queryData.height)).then(
-    fs.readFile(
-      "./imgs/thumbs/fjord-resized.jpg",
-      (err: string, data: unknown): void => {
-        if (err) throw err;
+  resizeImage(
+    queryData.filename as string,
+    Number(queryData.width),
+    Number(queryData.height)
+  ).then(err => {
+    if (err) {
+      res.send("the image not found please enter a valid image name");
+      return;
+    }
 
-        res.writeHead(200, { "content-type": "image/jpg" });
-        res.end(data);
-      }
-    )
-  );
+    res.sendFile("fjord-resized.jpg", {
+      root: "imgs/thumbs",
+    });
+  });
 });
 
 export default img;
