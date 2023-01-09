@@ -28,7 +28,7 @@ img.get("/", (req, res) => {
     queryData.filename as string,
     Number(queryData.width) as number,
     Number(queryData.height) as number
-  ).then((err) => {
+  ).then(err => {
     if (err) {
       res.send("the image not found please enter a valid image name");
       return;
@@ -38,4 +38,4 @@ img.get("/", (req, res) => {
     });
   });
 });
-export {img, resizeImage};
+export { img, resizeImage };

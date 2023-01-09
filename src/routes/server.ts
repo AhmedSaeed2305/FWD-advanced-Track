@@ -1,5 +1,5 @@
 import express from "express";
-import {img} from "./api/img";
+import { img } from "./api/img";
 
 const routes = express.Router();
 
