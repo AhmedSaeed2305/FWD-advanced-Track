@@ -7,7 +7,7 @@ const resizeImage = async function (
   filename: string,
   width: number,
   height: number
-) {
+): Promise<unknown> {
   try {
     const path = `./imgs/${filename}.jpg`;
     await sharp(path)
@@ -26,18 +26,16 @@ img.get("/", (req, res) => {
   const queryData = req.query;
   resizeImage(
     queryData.filename as string,
-    Number(queryData.width),
-    Number(queryData.height)
-  ).then(err => {
+    Number(queryData.width) as number,
+    Number(queryData.height) as number
+  ).then((err) => {
     if (err) {
       res.send("the image not found please enter a valid image name");
       return;
     }
-
     res.sendFile("fjord-resized.jpg", {
       root: "imgs/thumbs",
     });
   });
 });
-
-export default img;
+export {img, resizeImage};
