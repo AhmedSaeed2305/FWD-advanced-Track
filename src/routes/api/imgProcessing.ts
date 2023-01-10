@@ -7,7 +7,7 @@ const resizeImage = async function (
 ): Promise<unknown> {
   try {
     const path = `./imgs/${filename}.jpg`;
-    await sharp(path)
+    await sharp(path as string)
       .resize({
         width: width,
         height: height,
@@ -15,8 +15,8 @@ const resizeImage = async function (
       })
       .toFile(`./imgs/thumbs/${filename}-${width}x${height}.jpg`);
   } catch (err) {
-    console.log(err);
-    return err;
+    console.log(err as string);
+    return err as string;
   }
 };
 

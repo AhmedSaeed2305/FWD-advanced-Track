@@ -10,7 +10,7 @@ interface ImgData {
 
 const resizedImages: ImgData[] = [];
 
-img.get("/", (req, res) => {
+img.get("/", (req: express.Request, res: express.Response): void => {
   const queryData = req.query;
   const imgData: ImgData = {
     name: queryData.filename as string,
@@ -18,16 +18,27 @@ img.get("/", (req, res) => {
     height: Number(queryData.height),
   };
 
-  if(!resizedImages.some(el =>
-    el.width === Number(queryData.width) && el.height === Number(queryData.height)
-  ))
-   {
+  if (
+    resizedImages.some(
+      el =>
+        el.name === queryData.filename &&
+        el.width === Number(queryData.width) &&
+        el.height === Number(queryData.height)
+    )
+  ) {
+    res.sendFile(
+      `${queryData.filename}-${queryData.width}x${queryData.height}.jpg`,
+      {
+        root: "imgs/thumbs",
+      }
+    );
+  } else {
     resizeImage(
       queryData.filename as string,
       Number(queryData.width) as number,
       Number(queryData.height) as number
     ).then(err => {
-      if (err) {
+      if (err as string) {
         res.send("the image not found please enter a valid image name");
         return;
       }
@@ -37,15 +48,9 @@ img.get("/", (req, res) => {
           root: "imgs/thumbs",
         }
       );
+
+      resizedImages.push(imgData);
     });
-    resizedImages.push(imgData);
-  } else {
-    res.sendFile(
-      `${queryData.filename}-${queryData.width}x${queryData.height}.jpg`,
-      {
-        root: "imgs/thumbs",
-      }
-    );
   }
 });
 export default img;
