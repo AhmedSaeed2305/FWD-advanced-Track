@@ -5,7 +5,6 @@ const img = express.Router();
 
 img.get("/", (req, res) => {
   const queryData = req.query;
-  console.log(queryData);
   resizeImage(
     queryData.filename as string,
     Number(queryData.width) as number,
@@ -21,4 +20,4 @@ img.get("/", (req, res) => {
     
   });
 });
-export { img, resizeImage };
+export default img;

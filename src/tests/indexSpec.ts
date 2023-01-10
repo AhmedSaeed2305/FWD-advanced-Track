@@ -1,4 +1,5 @@
-import { img, resizeImage } from "../routes/api/imgRoute";
+import img from "../routes/api/imgRoute";
+import resizeImage from "../routes/api/imgProcessing";
 
 describe("the resize image suite", () => {
   it("takes an image and resize it and save it to the local files", async () => {
