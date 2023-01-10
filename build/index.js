@@ -11,3 +11,4 @@ app.listen(port, function () {
     console.log("Hey there I'm working on http://localhost:".concat(port));
 });
 app.use("/", server_1.default);
+exports.default = app;

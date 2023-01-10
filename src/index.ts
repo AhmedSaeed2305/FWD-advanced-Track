@@ -9,3 +9,5 @@ app.listen(port as number, (): void => {
 });
 
 app.use("/", routes);
+
+export default app;
