@@ -1,29 +1,11 @@
 import express from "express";
-import sharp from "sharp";
-
+import resizeImage from "./imgProcessing";
 const img = express.Router();
 
-const resizeImage = async function (
-  filename: string,
-  width: number,
-  height: number
-): Promise<unknown> {
-  try {
-    const path = `./imgs/${filename}.jpg`;
-    await sharp(path)
-      .resize({
-        width: width,
-        height: height,
-        fit: "fill",
-      })
-      .toFile("./imgs/thumbs/fjord-resized.jpg");
-  } catch (err) {
-    return err;
-  }
-};
 
 img.get("/", (req, res) => {
   const queryData = req.query;
+  console.log(queryData);
   resizeImage(
     queryData.filename as string,
     Number(queryData.width) as number,
@@ -33,9 +15,10 @@ img.get("/", (req, res) => {
       res.send("the image not found please enter a valid image name");
       return;
     }
-    res.sendFile("fjord-resized.jpg", {
+    res.sendFile(`${queryData.filename}-${queryData.width}x${queryData.height}.jpg`, {
       root: "imgs/thumbs",
     });
+    
   });
 });
 export { img, resizeImage };
