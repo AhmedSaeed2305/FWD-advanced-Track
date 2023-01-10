@@ -39,24 +39,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var imgRoute_1 = __importDefault(require("../routes/api/imgRoute"));
-var imgProcessing_1 = __importDefault(require("../routes/api/imgProcessing"));
-describe("the resize image suite", function () {
-    it("takes an image and resize it and save it to the local files", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
+var sharp_1 = __importDefault(require("sharp"));
+var resizeImage = function (filename, width, height) {
+    return __awaiter(this, void 0, void 0, function () {
+        var path, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, imgProcessing_1.default)("fjord", 600, 500)];
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    path = "./imgs/".concat(filename, ".jpg");
+                    return [4 /*yield*/, (0, sharp_1.default)(path)
+                            .resize({
+                            width: width,
+                            height: height,
+                            fit: "fill",
+                        })
+                            .toFile("./imgs/thumbs/".concat(filename, "-").concat(width, "x").concat(height, ".jpg"))];
                 case 1:
-                    result = _a.sent();
-                    expect(result).toBeFalsy();
-                    return [2 /*return*/];
+                    _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_1 = _a.sent();
+                    console.log(err_1);
+                    return [2 /*return*/, err_1];
+                case 3: return [2 /*return*/];
             }
         });
-    }); });
-});
-describe("the render image suite", function () {
-    it("takes a url request params and send the data to the resizeImage function to resize it then render the resized image", function () {
-        expect(imgRoute_1.default).not.toEqual(null);
     });
-});
+};
+exports.default = resizeImage;

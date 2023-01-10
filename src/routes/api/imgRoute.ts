@@ -17,6 +17,10 @@ img.get("/", (req: express.Request, res: express.Response): void => {
     width: Number(queryData.width),
     height: Number(queryData.height),
   };
+  if (!queryData.filename || !queryData.width || !queryData.height) {
+    res.status(404).send("Error: please provide file name, width and height");
+    return;
+  }
 
   if (
     resizedImages.some(
@@ -26,12 +30,14 @@ img.get("/", (req: express.Request, res: express.Response): void => {
         el.height === Number(queryData.height)
     )
   ) {
-    res.sendFile(
-      `${queryData.filename}-${queryData.width}x${queryData.height}.jpg`,
-      {
-        root: "imgs/thumbs",
-      }
-    );
+    res
+      .status(200)
+      .sendFile(
+        `${queryData.filename}-${queryData.width}x${queryData.height}.jpg`,
+        {
+          root: "imgs/thumbs",
+        }
+      );
   } else {
     resizeImage(
       queryData.filename as string,
@@ -39,15 +45,19 @@ img.get("/", (req: express.Request, res: express.Response): void => {
       Number(queryData.height) as number
     ).then(err => {
       if (err as string) {
-        res.send("the image not found please enter a valid image name");
+        res
+          .status(404)
+          .send("the image not found please enter a valid image name");
         return;
       }
-      res.sendFile(
-        `${queryData.filename}-${queryData.width}x${queryData.height}.jpg`,
-        {
-          root: "imgs/thumbs",
-        }
-      );
+      res
+        .status(200)
+        .sendFile(
+          `${queryData.filename}-${queryData.width}x${queryData.height}.jpg`,
+          {
+            root: "imgs/thumbs",
+          }
+        );
 
       resizedImages.push(imgData);
     });
