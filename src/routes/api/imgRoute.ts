@@ -38,7 +38,6 @@ img.get("/", (req: express.Request, res: express.Response): void => {
             res.status(200).sendFile(`${imgDataString}`, {
               root: `${resizedImagesFolder}`,
             });
-            console.log("existing image");
           }
         } catch (err: unknown) {
           resizeImage(
@@ -61,7 +60,6 @@ img.get("/", (req: express.Request, res: express.Response): void => {
                   root: `${resizedImagesFolder}`,
                 }
               );
-            console.log("new image");
           });
         }
       }

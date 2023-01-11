@@ -54,7 +54,7 @@ var resizeImage = function (filename, width, height) {
                             height: height,
                             fit: "fill",
                         })
-                            .toFile("./imgs/thumbs/".concat(filename, "-").concat(width, "x").concat(height, ".jpg"))];
+                            .toFile("./imgs/thumbs/".concat(filename, "-").concat(width, "-").concat(height, ".jpg"))];
                 case 1:
                     _a.sent();
                     return [3 /*break*/, 3];
