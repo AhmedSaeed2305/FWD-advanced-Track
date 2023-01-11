@@ -39,11 +39,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// import statements
 var imgRoute_1 = __importDefault(require("../routes/api/imgRoute"));
 var imgProcessing_1 = __importDefault(require("../routes/api/imgProcessing"));
 var index_1 = __importDefault(require("../index"));
 var supertest_1 = __importDefault(require("supertest"));
+// asigning supertest to the app
 var request = (0, supertest_1.default)(index_1.default);
+// resizing image module suite
 describe("the resize image suite", function () {
     it("takes an image and resize it and save it to the local files", function () { return __awaiter(void 0, void 0, void 0, function () {
         var result;
@@ -58,11 +61,13 @@ describe("the resize image suite", function () {
         });
     }); });
 });
+// rendering image module suite
 describe("the render image suite", function () {
     it("takes a url request params and send the data to the resizeImage function to resize it then render the resized image", function () {
         expect(imgRoute_1.default).not.toEqual(null);
     });
 });
+// the endpoint module suite
 describe("Test endpoint responses", function () {
     it("gets the api endpoint", function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;

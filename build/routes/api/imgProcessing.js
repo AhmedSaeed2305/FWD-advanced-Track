@@ -39,7 +39,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// import statements
 var sharp_1 = __importDefault(require("sharp"));
+// resizing the image function using sharp
 var resizeImage = function (filename, width, height) {
     return __awaiter(this, void 0, void 0, function () {
         var path, err_1;
@@ -48,14 +50,17 @@ var resizeImage = function (filename, width, height) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     path = "./imgs/".concat(filename, ".jpg");
+                    // resizing the image using the provided data from the URL query
                     return [4 /*yield*/, (0, sharp_1.default)(path)
                             .resize({
                             width: width,
                             height: height,
                             fit: "fill",
                         })
+                            // saving the resized image to the thumbs folder
                             .toFile("./imgs/thumbs/".concat(filename, "-").concat(width, "-").concat(height, ".jpg"))];
                 case 1:
+                    // resizing the image using the provided data from the URL query
                     _a.sent();
                     return [3 /*break*/, 3];
                 case 2:
@@ -67,4 +72,5 @@ var resizeImage = function (filename, width, height) {
         });
     });
 };
+//export statement
 exports.default = resizeImage;
