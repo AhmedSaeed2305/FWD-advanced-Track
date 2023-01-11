@@ -1,66 +1,83 @@
 import express from "express";
 import resizeImage from "./imgProcessing";
+import { accessSync } from "node:fs";
+import * as path from "path";
+
 const img = express.Router();
 
-interface ImgData {
-  name: string;
-  width: number;
-  height: number;
-}
+const resizedImagesFolder = path.resolve("./").concat("/imgs/thumbs");
 
-const resizedImages: ImgData[] = [];
+const checkImages = function (path: string): unknown {
+  try {
+    return accessSync(path);
+  } catch (err: unknown) {
+    console.log(err);
+    throw err;
+  }
+};
 
 img.get("/", (req: express.Request, res: express.Response): void => {
   const queryData = req.query;
-  const imgData: ImgData = {
-    name: queryData.filename as string,
-    width: Number(queryData.width),
-    height: Number(queryData.height),
-  };
-  if (!queryData.filename || !queryData.width || !queryData.height) {
-    res.status(404).send("Error: please provide file name, width and height");
-    return;
-  }
+  const imgDataString = `${queryData.filename}-${queryData.width}-${queryData.height}.jpg`;
 
   if (
-    resizedImages.some(
-      el =>
-        el.name === queryData.filename &&
-        el.width === Number(queryData.width) &&
-        el.height === Number(queryData.height)
-    )
+    queryData.filename &&
+    queryData.width &&
+    queryData.height &&
+    Number(queryData.width) > 0 &&
+    Number(queryData.height) > 0
   ) {
-    res
-      .status(200)
-      .sendFile(
-        `${queryData.filename}-${queryData.width}-${queryData.height}.jpg`,
-        {
-          root: "imgs/thumbs",
-        }
-      );
-  } else {
-    resizeImage(
-      queryData.filename as string,
-      Number(queryData.width) as number,
-      Number(queryData.height) as number
-    ).then(err => {
-      if (err as string) {
-        res
-          .status(404)
-          .send("the image not found please enter a valid image name");
-        return;
-      }
-      res
-        .status(200)
-        .sendFile(
-          `${queryData.filename}-${queryData.width}-${queryData.height}.jpg`,
-          {
-            root: "imgs/thumbs",
+    try {
+      if (
+        !checkImages(
+          `${path.resolve("./").concat("/imgs")}/${queryData.filename}.jpg`
+        )
+      ) {
+        try {
+          if (!checkImages(`${resizedImagesFolder}/${imgDataString}`)) {
+            res.status(200).sendFile(`${imgDataString}`, {
+              root: `${resizedImagesFolder}`,
+            });
+            console.log("existing image");
           }
+        } catch (err: unknown) {
+          resizeImage(
+            queryData.filename as string,
+            Number(queryData.width) as number,
+            Number(queryData.height) as number
+          ).then(err => {
+            if (err as Error) {
+              res
+                .status(404)
+                .send(
+                  "An error occured during image resizing please try again"
+                );
+            }
+            res
+              .status(200)
+              .sendFile(
+                `${queryData.filename}-${queryData.width}-${queryData.height}.jpg`,
+                {
+                  root: `${resizedImagesFolder}`,
+                }
+              );
+            console.log("new image");
+          });
+        }
+      }
+    } catch (err: unknown) {
+      res
+        .status(404)
+        .send(
+          "The file name you entered isn't availabe please enter a valid file name and try again!"
         );
-
-      resizedImages.push(imgData);
-    });
+    }
+  } else {
+    res
+      .status(404)
+      .send(
+        "The query data is incorrect please make sure to enter proper file name, width and height values"
+      );
   }
 });
 export default img;
