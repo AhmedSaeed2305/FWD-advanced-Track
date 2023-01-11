@@ -13,7 +13,7 @@ const resizeImage = async function (
         height: height,
         fit: "fill",
       })
-      .toFile(`./imgs/thumbs/${filename}-${width}x${height}.jpg`);
+      .toFile(`./imgs/thumbs/${filename}-${width}-${height}.jpg`);
   } catch (err) {
     console.log(err as string);
     return err as string;

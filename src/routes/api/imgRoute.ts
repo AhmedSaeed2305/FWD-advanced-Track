@@ -33,7 +33,7 @@ img.get("/", (req: express.Request, res: express.Response): void => {
     res
       .status(200)
       .sendFile(
-        `${queryData.filename}-${queryData.width}x${queryData.height}.jpg`,
+        `${queryData.filename}-${queryData.width}-${queryData.height}.jpg`,
         {
           root: "imgs/thumbs",
         }
@@ -53,7 +53,7 @@ img.get("/", (req: express.Request, res: express.Response): void => {
       res
         .status(200)
         .sendFile(
-          `${queryData.filename}-${queryData.width}x${queryData.height}.jpg`,
+          `${queryData.filename}-${queryData.width}-${queryData.height}.jpg`,
           {
             root: "imgs/thumbs",
           }
