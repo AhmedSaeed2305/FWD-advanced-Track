@@ -20,7 +20,7 @@ const resizeImage = async function (
       })
       // saving the resized image to the thumbs folder
       .toFile(`./imgs/thumbs/${filename}-${width}-${height}.jpg`);
-      // if any error occured during the processing throw it and log it.
+    // if any error occured during the processing throw it and log it.
   } catch (err: unknown) {
     console.log(err as string);
     return err as string;

@@ -1,7 +1,7 @@
 // import statementss
 import express from "express";
 import resizeImage from "./imgProcessing";
-import { accessSync } from "node:fs";
+import * as fs from "node:fs";
 import * as path from "path";
 
 //global variables
@@ -13,9 +13,9 @@ const resizedImagesFolder = path.resolve("./").concat("/imgs/thumbs");
 // it returns undefined if the image is exist if not it throws an Error.
 const checkImages = function (path: string): unknown {
   try {
-    return accessSync(path);
+    return fs.accessSync(path);
   } catch (err: unknown) {
-    console.log(err);
+    console.log("Image requested wasn't processed before, creating new image");
     throw err;
   }
 };
@@ -26,7 +26,7 @@ img.get("/", (req: express.Request, res: express.Response): void => {
   const queryData = req.query;
   // storing the processed image full name as string
   const imgDataString = `${queryData.filename}-${queryData.width}-${queryData.height}.jpg`;
-  // input sanitizing 
+  // input sanitizing
   if (
     queryData.filename &&
     queryData.width &&
@@ -56,7 +56,7 @@ img.get("/", (req: express.Request, res: express.Response): void => {
             Number(queryData.width) as number,
             Number(queryData.height) as number
           ).then(err => {
-            // handle any error occurs during resizing
+            // Guard clause to handle any error occurs during resizing
             if (err as Error) {
               res
                 .status(404)
@@ -64,7 +64,7 @@ img.get("/", (req: express.Request, res: express.Response): void => {
                   "An error occured during image resizing please try again"
                 );
             }
-            // send the resized image after processing 
+            // send the resized image after processing
             res
               .status(200)
               .sendFile(

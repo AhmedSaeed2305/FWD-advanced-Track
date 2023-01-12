@@ -29,7 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // import statementss
 var express_1 = __importDefault(require("express"));
 var imgProcessing_1 = __importDefault(require("./imgProcessing"));
-var node_fs_1 = require("node:fs");
+var fs = __importStar(require("node:fs"));
 var path = __importStar(require("path"));
 //global variables
 var img = express_1.default.Router();
@@ -38,10 +38,10 @@ var resizedImagesFolder = path.resolve("./").concat("/imgs/thumbs");
 // it returns undefined if the image is exist if not it throws an Error.
 var checkImages = function (path) {
     try {
-        return (0, node_fs_1.accessSync)(path);
+        return fs.accessSync(path);
     }
     catch (err) {
-        console.log(err);
+        console.log("Image requested wasn't processed before, creating new image");
         throw err;
     }
 };
@@ -51,7 +51,7 @@ img.get("/", function (req, res) {
     var queryData = req.query;
     // storing the processed image full name as string
     var imgDataString = "".concat(queryData.filename, "-").concat(queryData.width, "-").concat(queryData.height, ".jpg");
-    // input sanitizing 
+    // input sanitizing
     if (queryData.filename &&
         queryData.width &&
         queryData.height &&
@@ -72,13 +72,13 @@ img.get("/", function (req, res) {
                 }
                 catch (err) {
                     (0, imgProcessing_1.default)(queryData.filename, Number(queryData.width), Number(queryData.height)).then(function (err) {
-                        // handle any error occurs during resizing
+                        // Guard clause to handle any error occurs during resizing
                         if (err) {
                             res
                                 .status(404)
                                 .send("An error occured during image resizing please try again");
                         }
-                        // send the resized image after processing 
+                        // send the resized image after processing
                         res
                             .status(200)
                             .sendFile("".concat(queryData.filename, "-").concat(queryData.width, "-").concat(queryData.height, ".jpg"), {
